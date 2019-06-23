@@ -12,15 +12,14 @@
   ![avatar](assets/第三页.png)
 
 
-2. 无页脚
+2. 无页脚  
   ![avatar](assets/无页脚.png)
 
 
-3. 无标题无页脚
+3. 无标题无页脚  
   ![avatar](assets/无页脚标题.png)
 
-## Example
-
+## Example  
 ```
 from menu import Menu
 l = list(range(0, 24))
