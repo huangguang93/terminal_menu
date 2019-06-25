@@ -91,9 +91,9 @@ class Menu(object):
         用空格覆盖原来的菜单(清空菜单)，再将光标移动到第一行重新开始写入数据
         """
         if self.title_show and search:
-            back_line = 2 + 3
+            back_line = 2 + 3  # 2 因为search 2行    3 对应标题三行
         elif search:
-            back_line = 3
+            back_line = 2  # 2 因为搜索框2行
         elif self.title_show and self.foot_show:
             back_line = self.page_size + 5
         elif self.title_show:
