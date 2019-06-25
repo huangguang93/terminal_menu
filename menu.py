@@ -101,7 +101,7 @@ class Menu(object):
         elif self.foot_show:
             back_line = self.page_size + 2  # 2 因为foot占两行
         else:
-            back_line = self.page_size - 1
+            back_line = self.page_size
         # 光标移动到菜单开始位置
         sys.stdout.write('\033[%dA\033[K' % (back_line,))
         sys.stdout.flush()
