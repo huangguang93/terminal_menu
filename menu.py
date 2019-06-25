@@ -101,7 +101,7 @@ class Menu(object):
         elif self.foot_show:
             back_line = self.page_size + 2  # 2 因为foot占两行
         else:
-            back_line = self.page_size
+            back_line = self.page_size - 1
         # 光标移动到菜单开始位置
         sys.stdout.write('\033[%dA\033[K' % (back_line,))
         sys.stdout.flush()
@@ -144,18 +144,13 @@ class Menu(object):
                 s += "\r\n"
                 i += 1
                 continue
+            line_content = str(choose[i][1])
             if i == pos:
-                if self.id_show:
-                    content = str(start + i) + ". " + str(choose[i])
-                else:
-                    content = str(choose[i])
+                content = str(start + i) + ". " + line_content if self.id_show else line_content
                 temp = self.pointer + " " + content
                 temp = self._font_style(temp, fg=self.body_word_switch_color, bg="")
             else:
-                if self.id_show:
-                    content = str(start + i) + ". " + str(choose[i])
-                else:
-                    content = str(choose[i])
+                content = str(start + i) + ". " + line_content if self.id_show else line_content
                 temp = (len(self.pointer) + 1) * " " + content
                 temp = self._font_style(temp, fg=self.body_word_color)
             s += "\r" + self.offset + temp + "\n"
@@ -193,7 +188,7 @@ class Menu(object):
         sys.stdout.write(s)
         sys.stdout.flush()
         keyword = sys.stdin.readline().strip()
-        filter_choose = list(filter(lambda x: keyword in str(x), choose))
+        filter_choose = list(filter(lambda x: keyword in str(x[1]), choose))
         self.clr_scr(search=True)
         return filter_choose
 
@@ -244,7 +239,6 @@ class Menu(object):
                 page_list = choose[start:start + page_size]
             else:
                 page_list = choose[start:total]
-
             # 控制指针到达边界时
             if pos < 0:
                 pos = len(page_list) - 1
@@ -258,11 +252,10 @@ class Menu(object):
             pos, page, start, search, end, id, back = self.controller(
                 page_size=page_size, page=page, pos=pos, start=start, total=total)
 
-            self.clr_scr()
-
             if end:
                 return 0, id
-            elif search:
+            self.clr_scr()
+            if search:
                 return 1, None
             elif back:
                 return 2, None
@@ -270,21 +263,23 @@ class Menu(object):
     def menu(self, choose, title=None):
         if title and isinstance(title, list) is False:
             title = [str(title)]
-        choose_list = choose
+        # 给每项添加id
+        choose_with_id = [[i, v] for i, v in enumerate(choose)]
+        choose_list = choose_with_id
         while True:
             action, id = self.menu_box(choose_list,  title)
             if action == 0:
-                return choose_list[id]
+                return choose_list[id][0], choose_list[id][1]
             elif action == 1:
-                choose_list = self.search_box(choose, title)
+                choose_list = self.search_box(choose_list, title)
             elif action == 2:
-                choose_list = choose
+                choose_list = choose_with_id
 
 
 if __name__ == '__main__':
     test_data = ["阿里巴巴", "百度", "腾讯", "今日头条", "爱奇艺", "美团", "饿了吗", "小米",
                  "支付宝", "京东", "拼多多", "微博", "携程", "网易", "哔哩哔哩", "迅雷", "360"]
-    m = Menu(clear_screen=False)
-    m.menu_style(title_show=False, page_size=10)
+    m = Menu()
+    m.menu_style(page_size=10)
     pos = m.menu(test_data, title="互联网公司")
     print("Your word is ", pos)
