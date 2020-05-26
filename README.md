@@ -11,7 +11,7 @@
     test_data = ["阿里巴巴", "百度", "腾讯", "今日头条", "爱奇艺", "美团", "饿了吗", "小米",
                  "支付宝", "京东", "拼多多", "微博", "携程", "网易", "哔哩哔哩", "迅雷", "360"]
     m = Menu()
-    m.menu_style(page_size=10)
+    m.style(page_size=10)
     pos = m.menu(test_data, title="互联网公司")
     print("Your word is ", pos)
 ```
